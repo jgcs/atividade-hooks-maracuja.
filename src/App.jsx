@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Routes, Route, useParams, Link } from 'react-router-dom';
-
-/* --- NOVOS IMPORTS DO REDUX --- */
+import CatalogoInsumos from './CatalogoInsumos';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleTheme } from './themeSlice';
 
-// 1. SEU HOOK DE CULTIVO (Mantido firme e forte)
+// 1. SEU HOOK DE CULTIVO (O "negócio" do cronômetro)
 function useDiasCultivo() {
   const [dias, setDias] = useState(0);
   useEffect(() => {
@@ -16,13 +15,11 @@ function useDiasCultivo() {
   return dias;
 }
 
-// 2. COMPONENTE DE DETALHES (Reage à URL e ao Redux)
+// 2. COMPONENTE DE DETALHES (Onde o catálogo foi inserido)
 function DetalhesMuda() {
   const { tipoMaracuja } = useParams();
   const diasPassados = useDiasCultivo();
   const { register, handleSubmit } = useForm();
-
-  // Lendo o tema do Redux
   const themeMode = useSelector((state) => state.theme.mode);
   const isDark = themeMode === 'dark';
 
@@ -57,11 +54,13 @@ function DetalhesMuda() {
           Registrar no Sistema
         </button>
       </form>
+
+
     </main>
   );
 }
 
-// 3. COMPONENTE PRINCIPAL (Onde o botão de tema fica)
+// 3. COMPONENTE PRINCIPAL (App)
 function App() {
   const themeMode = useSelector((state) => state.theme.mode);
   const dispatch = useDispatch();
@@ -92,7 +91,6 @@ function App() {
       }}>
         <h1>Viveiro de Maracujá Pro</h1>
 
-        {/* BOTÃO QUE DISPARA O REDUX */}
         <button
           onClick={() => dispatch(toggleTheme())}
           style={{
@@ -109,11 +107,14 @@ function App() {
         <nav style={{ marginTop: '10px', display: 'flex', gap: '15px', justifyContent: 'center' }}>
           <Link to="/muda/azedo" style={{ color: isDark ? '#81c784' : 'yellow', fontWeight: 'bold' }}>Azedo</Link>
           <Link to="/muda/doce" style={{ color: isDark ? '#81c784' : 'yellow', fontWeight: 'bold' }}>Doce</Link>
+          <Link to="/insumos" style={{ color: isDark ? '#81c784' : 'yellow', fontWeight: 'bold' }}>Insumos</Link>
         </nav>
+
       </header>
 
       <Routes>
         <Route path="/muda/:tipoMaracuja" element={<DetalhesMuda />} />
+        <Route path="/insumos" element={<CatalogoInsumos />} />
         <Route path="/" element={
           <div style={{ textAlign: 'center', marginTop: '50px' }}>
             <h2>Bem-vindo, Gabriel!</h2>
